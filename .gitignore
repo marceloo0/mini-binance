@@ -1,0 +1,27 @@
+# Node / Expo
+node_modules/
+.expo/
+dist/
+npm-debug.*
+yarn-debug.*
+yarn-error.*
+
+# Environment
+.env*.local
+.env
+
+# Native builds
+*.orig.*
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+
+# macOS
+.DS_Store
+
+# Laravel Backend
+backend/vendor/
+backend/.env
+backend/storage/*.key
