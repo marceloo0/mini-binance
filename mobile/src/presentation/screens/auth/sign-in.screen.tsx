@@ -21,8 +21,8 @@ export function SignInScreen() {
     try {
       await signIn({ email, password });
       router.replace("/(private)/dashboard");
-    } catch {
-      setError("Falha ao efetuar login. Verifique as credenciais.");
+    } catch (err: any) {
+      setError(err?.message || "Falha ao efetuar login. Verifique as credenciais.");
     } finally {
       setLoading(false);
     }

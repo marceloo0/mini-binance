@@ -45,7 +45,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   },
 
   async signUp(email, password) {
-    const session = await authHttpRepository.login({ email, password });
+    const session = await authHttpRepository.register({ email, password });
     await storage.setSession(session);
     const user = { id: session.userId, email };
     set({ session, user });
