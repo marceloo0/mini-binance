@@ -1,0 +1,98 @@
+appId: com.anonymous.minibinancepoc
+---
+# ==========================================
+# MASTER E2E FLOW: JORNADA COMPLETA DO USUÁRIO
+# ==========================================
+
+- launchApp:
+    clearState: true
+
+# 1. Tela Inicial e Autenticação
+- assertVisible: "MINI BINANCE"
+- assertVisible: "Acesse sua conta de trading"
+
+- tapOn:
+    id: "emailInput"
+- inputText: "demo@example.com"
+
+- tapOn:
+    id: "passwordInput"
+- inputText: "123456"
+
+# Toca em área estática para fechar o teclado
+- tapOn: "MINI BINANCE"
+
+- tapOn:
+    id: "signInButton"
+
+- tapOn:
+    text: "Agora Não"
+    optional: true
+
+- tapOn:
+    text: "Not Now"
+    optional: true
+
+- takeScreenshot: after_login_click
+
+# 2. Validação do Dashboard Inicial
+- extendedWaitUntil:
+    visible: "Olá, Trader!"
+    timeout: 10000
+
+- assertVisible: ".*10\\.000,00.*"
+- assertVisible: "BTC / BRL"
+
+# 3. Navegação e Execução de Ordem de COMPRA (BUY)
+- tapOn:
+    id: "goToTradeButton"
+- extendedWaitUntil:
+    visible: "Negoceie BTC"
+    timeout: 5000
+
+- assertVisible: "COMPRAR BTC"
+
+# Digita valor da ordem e confirma
+- tapOn:
+    id: "tradeAmountInput"
+- inputText: "2500"
+- tapOn: "Negoceie BTC"
+- assertVisible: "Estimativa de recebimento:"
+- tapOn:
+    id: "confirmTradeButton"
+
+# Asserção do banner verde de sucesso
+- assertVisible: ".*Compra realizada com sucesso!.*"
+
+# 4. Alternância para Aba VENDA (SELL) e Execução de Ordem de Venda
+- tapOn: "VENDER BTC"
+- assertVisible: "CONFIRMAR VENDA"
+
+# Utiliza botão MAX de saldo de BTC
+- tapOn:
+    id: "maxAmountButton"
+- tapOn: "Negoceie BTC"
+- tapOn:
+    id: "confirmTradeButton"
+
+# Asserção do banner de sucesso da venda
+- assertVisible: ".*Venda realizada com sucesso!.*"
+
+# 5. Verificação do Histórico no Extrato
+- tapOn: "← Voltar"
+- tapOn:
+    id: "goToTransactionsButton"
+- extendedWaitUntil:
+    visible: "Histórico de Ordens"
+    timeout: 5000
+
+- assertVisible: "COMPRA"
+- assertVisible: "VENDA"
+
+# 6. Retorno ao Dashboard e Logout Seguro
+- tapOn: "← Voltar"
+- assertVisible: "Olá, Trader!"
+- tapOn: "SAIR"
+- extendedWaitUntil:
+    visible: "MINI BINANCE"
+    timeout: 5000

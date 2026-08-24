@@ -1,0 +1,68 @@
+appId: com.anonymous.minibinancepoc
+---
+# ==========================================
+# E2E FLOW 03: NEGOCIAÇÃO COMPLETA DE TRADE (COMPRA E VENDA)
+# ==========================================
+
+- launchApp:
+    clearState: true
+
+- tapOn:
+    id: "emailInput"
+- inputText: "demo@example.com"
+- tapOn:
+    id: "passwordInput"
+- inputText: "123456"
+- tapOn: "MINI BINANCE"
+- tapOn:
+    id: "signInButton"
+- tapOn:
+    text: "Agora Não"
+    optional: true
+
+- extendedWaitUntil:
+    visible: "Olá, Trader!"
+    timeout: 10000
+
+# Navega para a tela de Trade
+- tapOn:
+    id: "goToTradeButton"
+
+- extendedWaitUntil:
+    visible: "Negoceie BTC"
+    timeout: 5000
+
+- assertVisible: "Valor a investir (BRL)"
+- assertVisible: "COMPRAR BTC"
+
+# ------------------------------------------
+# PARTE A: ORDEM DE COMPRA (BUY)
+# ------------------------------------------
+- tapOn:
+    id: "tradeAmountInput"
+- inputText: "1500"
+
+- tapOn: "Negoceie BTC"
+- assertVisible: "Estimativa de recebimento:"
+
+# Executa compra
+- tapOn:
+    id: "confirmTradeButton"
+- assertVisible: ".*Compra realizada com sucesso!.*"
+
+# ------------------------------------------
+# PARTE B: ALTERNÂNCIA E ORDEM DE VENDA (SELL)
+# ------------------------------------------
+- tapOn: "VENDER BTC"
+- assertVisible: "Quantidade a vender (BTC)"
+
+# Testa botão MAX para selecionar todo o saldo de BTC disponível
+- tapOn:
+    id: "maxAmountButton"
+
+- tapOn: "Negoceie BTC"
+
+# Executa venda
+- tapOn:
+    id: "confirmTradeButton"
+- assertVisible: ".*Venda realizada com sucesso!.*"

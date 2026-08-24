@@ -1,0 +1,64 @@
+appId: com.anonymous.minibinancepoc
+---
+# ==========================================
+# E2E FLOW 01: AUTENTICAÇÃO E CADASTRO
+# ==========================================
+
+- launchApp:
+    clearState: true
+
+# Validação visual da tela de login
+- assertVisible: "MINI BINANCE"
+- assertVisible: "Acesse sua conta de trading"
+- assertVisible: "ENTRAR"
+
+# Teste de validação de formulário vazio
+- tapOn:
+    id: "signInButton"
+- assertVisible: "Preencha e-mail e senha."
+
+# Teste de navegação para tela de Cadastro
+- tapOn: "Não tem conta? Cadastre-se"
+- extendedWaitUntil:
+    visible: "CRIAR CONTA"
+    timeout: 5000
+- assertVisible: "Registre-se para iniciar no Mini Binance"
+
+# Teste de validação de formulário de cadastro vazio
+- tapOn:
+    id: "signUpButton"
+- assertVisible: "Preencha e-mail e senha."
+
+# Retorno para Login
+- tapOn: "Já possui conta? Fazer Login"
+- extendedWaitUntil:
+    visible: "Acesse sua conta de trading"
+    timeout: 5000
+
+# Preenchimento de credenciais válidas e login
+- tapOn:
+    id: "emailInput"
+- inputText: "demo@example.com"
+- tapOn:
+    id: "passwordInput"
+- inputText: "123456"
+
+# Toca em área estática para fechar o teclado
+- tapOn: "MINI BINANCE"
+
+- tapOn:
+    id: "signInButton"
+
+- tapOn:
+    text: "Agora Não"
+    optional: true
+
+- tapOn:
+    text: "Not Now"
+    optional: true
+
+# Confirmação de acesso ao Dashboard
+- extendedWaitUntil:
+    visible: "Olá, Trader!"
+    timeout: 10000
+- assertVisible: "demo@example.com"

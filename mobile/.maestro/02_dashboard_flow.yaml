@@ -1,0 +1,54 @@
+appId: com.anonymous.minibinancepoc
+---
+# ==========================================
+# E2E FLOW 02: DASHBOARD E COTAÇÃO AO VIVO
+# ==========================================
+
+- launchApp:
+    clearState: true
+
+- tapOn:
+    id: "emailInput"
+- inputText: "demo@example.com"
+- tapOn:
+    id: "passwordInput"
+- inputText: "123456"
+- tapOn: "MINI BINANCE"
+- tapOn:
+    id: "signInButton"
+- tapOn:
+    text: "Agora Não"
+    optional: true
+
+- extendedWaitUntil:
+    visible: "Olá, Trader!"
+    timeout: 10000
+
+- assertVisible: "SUA CARTEIRA"
+- assertVisible: "Saldo Fiat (BRL)"
+- assertVisible: ".*10\\.000,00.*"
+- assertVisible: "Saldo BTC"
+
+# Validação do Banner de Cotação BTC em Tempo Real
+- assertVisible: "BTC / BRL"
+- assertVisible: ".*R\\$.*"
+
+# Validação da Seção de Ações Rápidas
+- assertVisible: "AÇÕES RÁPIDAS"
+
+# Teste de navegação rápida para Trade e Retorno
+- tapOn:
+    id: "goToTradeButton"
+- extendedWaitUntil:
+    visible: "Negoceie BTC"
+    timeout: 5000
+- tapOn: "← Voltar"
+
+# Teste de navegação rápida para Extrato e Retorno
+- tapOn:
+    id: "goToTransactionsButton"
+- extendedWaitUntil:
+    visible: "Histórico de Ordens"
+    timeout: 5000
+- tapOn: "← Voltar"
+- assertVisible: "Olá, Trader!"

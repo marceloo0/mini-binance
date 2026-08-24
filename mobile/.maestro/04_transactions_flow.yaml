@@ -1,0 +1,39 @@
+appId: com.anonymous.minibinancepoc
+---
+# ==========================================
+# E2E FLOW 04: HISTÓRICO E EXTRATO DE ORDENS
+# ==========================================
+
+- launchApp:
+    clearState: true
+
+- tapOn:
+    id: "emailInput"
+- inputText: "demo@example.com"
+- tapOn:
+    id: "passwordInput"
+- inputText: "123456"
+- tapOn: "MINI BINANCE"
+- tapOn:
+    id: "signInButton"
+- tapOn:
+    text: "Agora Não"
+    optional: true
+
+- extendedWaitUntil:
+    visible: "Olá, Trader!"
+    timeout: 10000
+
+- tapOn:
+    id: "goToTransactionsButton"
+
+- extendedWaitUntil:
+    visible: "Histórico de Ordens"
+    timeout: 5000
+
+# Validação dos elementos visuais das transações
+- assertVisible: "BTC / BRL"
+
+# Retorna com segurança ao Dashboard
+- tapOn: "← Voltar"
+- assertVisible: "Olá, Trader!"

@@ -1,0 +1,38 @@
+appId: com.anonymous.minibinancepoc
+---
+# ==========================================
+# E2E FLOW 05: ENCERRAMENTO SEGURO DE SESSÃO (LOGOUT)
+# ==========================================
+
+- launchApp:
+    clearState: true
+
+- tapOn:
+    id: "emailInput"
+- inputText: "demo@example.com"
+- tapOn:
+    id: "passwordInput"
+- inputText: "123456"
+- tapOn: "MINI BINANCE"
+- tapOn:
+    id: "signInButton"
+- tapOn:
+    text: "Agora Não"
+    optional: true
+
+- extendedWaitUntil:
+    visible: "Olá, Trader!"
+    timeout: 10000
+
+- assertVisible: "SAIR"
+
+# Aciona logout do usuário
+- tapOn: "SAIR"
+
+# Valida redirecionamento de segurança para a tela de autenticação
+- extendedWaitUntil:
+    visible: "Acesse sua conta de trading"
+    timeout: 5000
+
+- assertVisible: "MINI BINANCE"
+- assertVisible: "ENTRAR"
