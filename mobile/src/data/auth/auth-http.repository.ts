@@ -21,6 +21,7 @@ export class AuthHttpRepository implements AuthRepository {
           userId: String(response.data.user_id),
         };
       }
+      throw new Error("Resposta inválida do servidor.");
     } catch (error: any) {
       if (error?.response?.data?.errors?.email?.[0]) {
         throw new Error(error.response.data.errors.email[0]);
@@ -35,21 +36,8 @@ export class AuthHttpRepository implements AuthRepository {
       if (error?.response?.status === 401 || error?.response?.status === 422) {
         throw new Error("Credenciais inválidas. Verifique o e-mail e a senha.");
       }
+      throw new Error("Não foi possível conectar ao servidor. Verifique se o backend está ativo.");
     }
-
-    // Fallback offline / POC para a conta de demonstração padrão
-    if (
-      (input.email === "demo@example.com" || input.email === "seu@email.com") &&
-      input.password === "123456"
-    ) {
-      return {
-        accessToken: "mock-access-token",
-        refreshToken: "mock-refresh-token",
-        userId: "1",
-      };
-    }
-
-    throw new Error("Credenciais inválidas. Verifique o e-mail e a senha.");
   }
 
   async register(input: { name?: string; email: string; password: string }): Promise<AuthSession> {
@@ -71,6 +59,7 @@ export class AuthHttpRepository implements AuthRepository {
           userId: String(response.data.user_id),
         };
       }
+      throw new Error("Resposta inválida do servidor.");
     } catch (error: any) {
       if (
         error?.response?.data?.message &&
@@ -79,13 +68,8 @@ export class AuthHttpRepository implements AuthRepository {
       ) {
         throw new Error(error.response.data.message);
       }
+      throw new Error("Não foi possível conectar ao servidor. Verifique se o backend está ativo.");
     }
-
-    return {
-      accessToken: "mock-access-token",
-      refreshToken: "mock-refresh-token",
-      userId: "1",
-    };
   }
 
   async refresh(refreshToken: string): Promise<AuthSession> {
@@ -97,10 +81,6 @@ export class AuthHttpRepository implements AuthRepository {
   }
 
   async me(accessToken: string): Promise<{ id: string; email: string }> {
-    if (accessToken === "mock-access-token") {
-      return { id: "user-1", email: "demo@example.com" };
-    }
-
     try {
       const response = await api.get<{ id?: number; name?: string; email?: string }>("/api/me", {
         headers: { Authorization: `Bearer ${accessToken}` },
@@ -111,11 +91,10 @@ export class AuthHttpRepository implements AuthRepository {
           email: response.data.email,
         };
       }
-    } catch {
-      // Fallback
+      throw new Error("Dados do usuário não encontrados.");
+    } catch (error: any) {
+      throw new Error("Sessão expirada ou servidor inacessível.");
     }
-
-    return { id: "user-1", email: "demo@example.com" };
   }
 }
 

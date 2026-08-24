@@ -40,7 +40,8 @@ appId: com.anonymous.minibinancepoc
     visible: "Olá, Trader!"
     timeout: 10000
 
-- assertVisible: ".*10\\.000,00.*"
+- assertVisible: "SUA CARTEIRA"
+- assertVisible: ".*R\\$.*"
 - assertVisible: "BTC / BRL"
 
 # 3. Navegação e Execução de Ordem de COMPRA (BUY)

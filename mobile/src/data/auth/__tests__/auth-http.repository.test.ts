@@ -33,7 +33,11 @@ describe("AuthHttpRepository", () => {
     });
   });
 
-  it("should throw error message on invalid password", async () => {
+  it("should throw error message on invalid password from API", async () => {
+    (api.post as jest.Mock).mockRejectedValueOnce({
+      response: { status: 422, data: { message: "Credenciais inválidas. Verifique o e-mail e a senha." } },
+    });
+
     await expect(repository.login({ email: "wrong@example.com", password: "wrong" }))
       .rejects.toThrow("Credenciais inválidas. Verifique o e-mail e a senha.");
   });
@@ -112,11 +116,11 @@ describe("AuthHttpRepository", () => {
     expect(user).toEqual({ id: "10", email: "user10@example.com" });
   });
 
-  it("should return fallback user profile when me request fails", async () => {
+  it("should throw error when me request fails", async () => {
     (api.get as jest.Mock).mockRejectedValueOnce(new Error("Unauthorized"));
 
-    const user = await repository.me("invalid-token");
-
-    expect(user).toEqual({ id: "user-1", email: "demo@example.com" });
+    await expect(repository.me("invalid-token")).rejects.toThrow(
+      "Sessão expirada ou servidor inacessível."
+    );
   });
 });
