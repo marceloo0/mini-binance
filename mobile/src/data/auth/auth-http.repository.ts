@@ -23,14 +23,6 @@ export class AuthHttpRepository implements AuthRepository {
       }
     } catch (error: any) {
       if (error?.response?.data?.errors?.email?.[0]) {
-        // Se for o usuário de teste/demo e a base do backend ainda não estiver seeded, provê fallback gracioso
-        if (input.email === "demo@example.com" || input.email === "seu@email.com") {
-          return {
-            accessToken: "mock-access-token",
-            refreshToken: "mock-refresh-token",
-            userId: "1",
-          };
-        }
         throw new Error(error.response.data.errors.email[0]);
       }
       if (
@@ -40,14 +32,24 @@ export class AuthHttpRepository implements AuthRepository {
       ) {
         throw new Error(error.response.data.message);
       }
+      if (error?.response?.status === 401 || error?.response?.status === 422) {
+        throw new Error("Credenciais inválidas. Verifique o e-mail e a senha.");
+      }
     }
 
-    // Fallback para modo POC/Offline
-    return {
-      accessToken: "mock-access-token",
-      refreshToken: "mock-refresh-token",
-      userId: "1",
-    };
+    // Fallback offline / POC para a conta de demonstração padrão
+    if (
+      (input.email === "demo@example.com" || input.email === "seu@email.com") &&
+      input.password === "123456"
+    ) {
+      return {
+        accessToken: "mock-access-token",
+        refreshToken: "mock-refresh-token",
+        userId: "1",
+      };
+    }
+
+    throw new Error("Credenciais inválidas. Verifique o e-mail e a senha.");
   }
 
   async register(input: { name?: string; email: string; password: string }): Promise<AuthSession> {

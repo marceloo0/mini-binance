@@ -20,11 +20,11 @@ describe("AuthHttpRepository", () => {
       },
     });
 
-    const session = await repository.login({ email: "test@example.com", password: "password123" });
+    const session = await repository.login({ email: "test@example.com", password: "123456" });
 
     expect(api.post).toHaveBeenCalledWith("/api/login", {
       email: "test@example.com",
-      password: "password123",
+      password: "123456",
     });
     expect(session).toEqual({
       accessToken: "mock-token",
@@ -33,13 +33,9 @@ describe("AuthHttpRepository", () => {
     });
   });
 
-  it("should throw error message from API response on login failure", async () => {
-    (api.post as jest.Mock).mockRejectedValueOnce({
-      response: { data: { message: "Credenciais incorretas." } },
-    });
-
+  it("should throw error message on invalid password", async () => {
     await expect(repository.login({ email: "wrong@example.com", password: "wrong" }))
-      .rejects.toThrow("Credenciais incorretas.");
+      .rejects.toThrow("Credenciais inválidas. Verifique o e-mail e a senha.");
   });
 
   it("should throw email error when provided in login error response", async () => {
@@ -47,7 +43,7 @@ describe("AuthHttpRepository", () => {
       response: { status: 422, data: { errors: { email: ["E-mail inválido"] } } },
     });
 
-    await expect(repository.login({ email: "invalid", password: "pass" }))
+    await expect(repository.login({ email: "invalid", password: "123456" }))
       .rejects.toThrow("E-mail inválido");
   });
 
@@ -56,7 +52,7 @@ describe("AuthHttpRepository", () => {
       response: { status: 422, data: { message: "Credenciais inválidas." } },
     });
 
-    await expect(repository.login({ email: "test@example.com", password: "pass" }))
+    await expect(repository.login({ email: "test@example.com", password: "123456" }))
       .rejects.toThrow("Credenciais inválidas.");
   });
 
