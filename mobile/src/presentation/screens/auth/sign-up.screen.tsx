@@ -39,6 +39,7 @@ export function SignUpScreen() {
         <View style={styles.inputGroup}>
           <Text style={styles.label}>E-mail</Text>
           <TextInput
+            testID="signUpEmailInput"
             style={styles.input}
             autoCapitalize="none"
             keyboardType="email-address"
@@ -52,6 +53,7 @@ export function SignUpScreen() {
         <View style={styles.inputGroup}>
           <Text style={styles.label}>Senha</Text>
           <TextInput
+            testID="signUpPasswordInput"
             style={styles.input}
             secureTextEntry
             value={password}
@@ -61,7 +63,7 @@ export function SignUpScreen() {
           />
         </View>
 
-        <TouchableOpacity style={styles.button} onPress={handleSignUp} disabled={loading}>
+        <TouchableOpacity testID="signUpButton" style={styles.button} onPress={handleSignUp} disabled={loading}>
           {loading ? (
             <ActivityIndicator color="#000" />
           ) : (

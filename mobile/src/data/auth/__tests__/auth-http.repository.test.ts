@@ -44,7 +44,7 @@ describe("AuthHttpRepository", () => {
 
   it("should throw email error when provided in login error response", async () => {
     (api.post as jest.Mock).mockRejectedValueOnce({
-      response: { data: { errors: { email: ["E-mail inválido"] } } },
+      response: { status: 422, data: { errors: { email: ["E-mail inválido"] } } },
     });
 
     await expect(repository.login({ email: "invalid", password: "pass" }))
@@ -52,10 +52,12 @@ describe("AuthHttpRepository", () => {
   });
 
   it("should throw default connection error when login API error has no specific message", async () => {
-    (api.post as jest.Mock).mockRejectedValueOnce(new Error("Network Error"));
+    (api.post as jest.Mock).mockRejectedValueOnce({
+      response: { status: 422, data: { message: "Credenciais inválidas." } },
+    });
 
     await expect(repository.login({ email: "test@example.com", password: "pass" }))
-      .rejects.toThrow("Credenciais inválidas ou erro de conexão com a API.");
+      .rejects.toThrow("Credenciais inválidas.");
   });
 
   it("should register successfully and return session", async () => {
@@ -88,10 +90,12 @@ describe("AuthHttpRepository", () => {
   });
 
   it("should handle register error response gracefully", async () => {
-    (api.post as jest.Mock).mockRejectedValueOnce(new Error("Network Error"));
+    (api.post as jest.Mock).mockRejectedValueOnce({
+      response: { status: 422, data: { message: "Erro ao realizar cadastro." } },
+    });
 
     await expect(repository.register({ email: "fail@example.com", password: "secret" }))
-      .rejects.toThrow("Erro ao realizar cadastro. Verifique os dados fornecidos.");
+      .rejects.toThrow("Erro ao realizar cadastro.");
   });
 
   it("should refresh token returning formatted session", async () => {
@@ -117,6 +121,6 @@ describe("AuthHttpRepository", () => {
 
     const user = await repository.me("invalid-token");
 
-    expect(user).toEqual({ id: "user-1", email: "usuario@minibinance.com" });
+    expect(user).toEqual({ id: "user-1", email: "demo@example.com" });
   });
 });

@@ -43,6 +43,7 @@ export function DashboardScreen() {
         <Text style={styles.sectionTitle}>AÇÕES RÁPIDAS</Text>
         <View style={styles.actionGrid}>
           <TouchableOpacity
+            testID="goToTradeButton"
             style={[styles.actionCard, styles.buyAction]}
             onPress={() => router.push("/(private)/trade")}
           >
@@ -51,6 +52,7 @@ export function DashboardScreen() {
           </TouchableOpacity>
 
           <TouchableOpacity
+            testID="goToTransactionsButton"
             style={styles.actionCard}
             onPress={() => router.push("/(private)/transactions")}
           >

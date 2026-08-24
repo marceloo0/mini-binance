@@ -36,6 +36,8 @@
   "scripts": {
     "postinstall": "node scripts/fix-expo-router.js",
     "test": "jest",
+    "test:e2e": "maestro test .maestro/",
+    "test:e2e:master": "maestro test .maestro/00_master_flow.yaml",
     "start": "expo start",
     "android": "expo run:android",
     "ios": "expo run:ios",

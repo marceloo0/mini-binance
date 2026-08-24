@@ -79,12 +79,13 @@ export function TradeForm({
           <Text style={styles.label}>
             {mode === "BUY" ? "Valor a investir (BRL)" : "Quantidade a vender (BTC)"}
           </Text>
-          <TouchableOpacity onPress={handleMaxPress}>
+          <TouchableOpacity testID="maxAmountButton" onPress={handleMaxPress}>
             <Text style={styles.maxBtn}>MAX ({maxAvailable})</Text>
           </TouchableOpacity>
         </View>
 
         <TextInput
+          testID="tradeAmountInput"
           style={styles.input}
           keyboardType="numeric"
           placeholder={mode === "BUY" ? "Ex: 500,00" : "Ex: 0.002"}
@@ -106,6 +107,7 @@ export function TradeForm({
 
       {/* Botão de Envio com Proteção Contra Duplo Clique */}
       <TouchableOpacity
+        testID="confirmTradeButton"
         style={[
           styles.submitBtn,
           mode === "BUY" ? styles.submitBtnBuy : styles.submitBtnSell,

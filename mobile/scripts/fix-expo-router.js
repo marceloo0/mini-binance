@@ -27,3 +27,24 @@ function processDir(dir) {
 }
 
 processDir(baseDir);
+
+function fixRuntimeScheduler(dir) {
+  if (!fs.existsSync(dir)) return;
+  const entries = fs.readdirSync(dir, { withFileTypes: true });
+  for (const entry of entries) {
+    const fullPath = path.join(dir, entry.name);
+    if (entry.isDirectory()) {
+      fixRuntimeScheduler(fullPath);
+    } else if (entry.isFile() && entry.name === "RuntimeScheduler.h") {
+      let content = fs.readFileSync(fullPath, "utf8");
+      if (content.includes("SWIFT_RETURNS_RETAINED RuntimeScheduler")) {
+        content = content.replace(/SWIFT_RETURNS_RETAINED\s+RuntimeScheduler/g, "RuntimeScheduler");
+        fs.writeFileSync(fullPath, content);
+        console.log("Patched RuntimeScheduler.h at:", fullPath);
+      }
+    }
+  }
+}
+
+const nodeModulesDir = path.resolve(__dirname, "../node_modules");
+fixRuntimeScheduler(nodeModulesDir);

@@ -19,8 +19,8 @@ export function setUnauthorizedHandler(handler: () => void) {
 }
 
 export const api = axios.create({
-  baseURL: process.env.EXPO_PUBLIC_API_URL ?? "https://api.example.com",
-  timeout: 15000,
+  baseURL: process.env.EXPO_PUBLIC_API_URL ?? "http://localhost:8000",
+  timeout: process.env.NODE_ENV === "test" ? 15000 : 1000,
 });
 
 api.interceptors.request.use(async (config) => {

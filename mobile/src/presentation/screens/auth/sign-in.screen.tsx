@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, ActivityIndicator } from "react-native";
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, ActivityIndicator, TouchableWithoutFeedback, Keyboard } from "react-native";
 import { useAuthStore } from "@/presentation/stores/auth.store";
 import { router } from "expo-router";
 
 export function SignInScreen() {
-  const [email, setEmail] = useState("demo@example.com");
-  const [password, setPassword] = useState("123456");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -20,17 +20,19 @@ export function SignInScreen() {
     setError(null);
     try {
       await signIn({ email, password });
-      router.replace("/(private)/dashboard");
     } catch (err: any) {
       setError(err?.message || "Falha ao efetuar login. Verifique as credenciais.");
-    } finally {
       setLoading(false);
+      return;
     }
+    setLoading(false);
+    router.replace("/(private)/dashboard");
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.card}>
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+      <View style={styles.container}>
+        <View style={styles.card}>
         <Text style={styles.brandTitle}>MINI BINANCE</Text>
         <Text style={styles.subtitle}>Acesse sua conta de trading</Text>
 
@@ -39,6 +41,7 @@ export function SignInScreen() {
         <View style={styles.inputGroup}>
           <Text style={styles.label}>E-mail</Text>
           <TextInput
+            testID="emailInput"
             style={styles.input}
             autoCapitalize="none"
             keyboardType="email-address"
@@ -52,6 +55,7 @@ export function SignInScreen() {
         <View style={styles.inputGroup}>
           <Text style={styles.label}>Senha</Text>
           <TextInput
+            testID="passwordInput"
             style={styles.input}
             secureTextEntry
             value={password}
@@ -61,7 +65,7 @@ export function SignInScreen() {
           />
         </View>
 
-        <TouchableOpacity style={styles.button} onPress={handleSignIn} disabled={loading}>
+        <TouchableOpacity testID="signInButton" style={styles.button} onPress={handleSignIn} disabled={loading}>
           {loading ? (
             <ActivityIndicator color="#000" />
           ) : (
@@ -74,6 +78,7 @@ export function SignInScreen() {
         </TouchableOpacity>
       </View>
     </View>
+    </TouchableWithoutFeedback>
   );
 }
 

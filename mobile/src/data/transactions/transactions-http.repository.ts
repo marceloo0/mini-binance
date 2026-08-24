@@ -19,7 +19,6 @@ export class TransactionsHttpRepository implements TransactionsRepository {
       const response = await api.get<TransactionRecord[]>("/api/transactions");
       return response.data;
     } catch {
-      // Fallback ordenado por data decrescente (mais recente primeiro)
       return [...mockTransactions].sort(
         (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
       );

@@ -12,16 +12,13 @@ let mockWalletState: UserWallet = {
 export class WalletHttpRepository implements WalletRepository {
   async getWallet(): Promise<UserWallet> {
     try {
-      // Se houver backend ativo, consome o endpoint real
       const response = await api.get<UserWallet>("/api/wallet");
       return response.data;
     } catch {
-      // Fallback gracioso para a POC com valores padrão do teste técnico (R$ 10.000 e 0 BTC)
       return mockWalletState;
     }
   }
 
-  // Método auxiliar interno para atualizar o estado local na POC offline
   updateLocalWallet(fiatChange: number, cryptoChange: number) {
     mockWalletState = {
       fiatBalanceBrl: Math.max(0, Number((mockWalletState.fiatBalanceBrl + fiatChange).toFixed(2))),
